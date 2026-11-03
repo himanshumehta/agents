@@ -1,0 +1,10 @@
+{"version":3,"term":{"cols":150,"rows":24},"timestamp":1793733823,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/evidence/demo-6661.sh","env":{"SHELL":"/bin/zsh"}}
+[0.012, "o", "livekit/agents #6661: session host responses, tests from #6781\r\n\r\n"]
+[0.000, "o", "$ git show 3568970323^:livekit-agents/livekit/agents/voice/remote_session.py > livekit-agents/livekit/agents/voice/remote_session.py   (remote_session.py before #6781)\r\n"]
+[0.019, "o", "$ pytest tests/test_remote_session.py -k 'aclose_flushes or raises_instead_of_dropping'\r\n"]
+[2.354, "o", "  E               TimeoutError\r\n  >       with pytest.raises(RuntimeError, match=\"failed to send binary stream message\"):\r\n  E       Failed: DID NOT RAISE RuntimeError\r\n  WARNING  livekit.agents:remote_session.py:138 failed to send binary stream message: stream refused\r\n  FAILED tests/test_remote_session.py::test_aclose_flushes_the_response_of_an_inflight_request\r\n  FAILED tests/test_remote_session.py::test_room_transport_raises_instead_of_dropping_the_message\r\n  ======================= 2 failed, 12 deselected in 1.17s =======================\r\n"]
+[0.018, "o", "\r\n"]
+[0.000, "o", "$ git checkout 3568970323 -- livekit-agents/livekit/agents/voice/remote_session.py   (after #6781, shipped in livekit-agents@1.6.10)\r\n"]
+[0.000, "o", "$ pytest tests/test_remote_session.py -k 'aclose_flushes or raises_instead_of_dropping'\r\n"]
+[1.362, "o", "  PASSED tests/test_remote_session.py::test_aclose_flushes_the_response_of_an_inflight_request\r\n  PASSED tests/test_remote_session.py::test_room_transport_raises_instead_of_dropping_the_message\r\n  ======================= 2 passed, 12 deselected in 0.15s =======================\r\n"]
+[0.000, "x", "0"]
