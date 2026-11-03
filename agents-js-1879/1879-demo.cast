@@ -1,0 +1,11 @@
+{"version":3,"term":{"cols":118,"rows":26},"timestamp":1793733510,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/evidence/demo-1879.sh","env":{"SHELL":"/bin/zsh"}}
+[0.009, "o", "livekit/agents-js #1879: OpenTelemetry versions in @livekit/agents\r\n\r\n"]
+[0.000, "o", "$ npm view @livekit/agents@1.5.5 dependencies   (last 1.5.x)\r\n"]
+[0.433, "o", "  \"@opentelemetry/api\": \"^1.9.0\",\r\n  \"@opentelemetry/core\": \"^2.2.0\",\r\n  \"@opentelemetry/resources\": \"^1.28.0\",\r\n  \"@opentelemetry/sdk-trace-base\": \"^1.28.0\",\r\n  \"@opentelemetry/sdk-trace-node\": \"^1.28.0\",\r\n  \"@opentelemetry/semantic-conventions\": \"^1.28.0\",\r\n"]
+[0.000, "o", "\r\n"]
+[0.000, "o", "$ npm view @livekit/agents@1.6.0 dependencies   (after #2105)\r\n"]
+[0.351, "o", "  \"@opentelemetry/api\": \"^1.9.0\",\r\n  \"@opentelemetry/core\": \"^2.8.0\",\r\n  \"@opentelemetry/resources\": \"^2.8.0\",\r\n  \"@opentelemetry/sdk-trace-base\": \"^2.8.0\",\r\n  \"@opentelemetry/sdk-trace-node\": \"^2.8.0\",\r\n  \"@opentelemetry/semantic-conventions\": \"^1.28.0\",\r\n"]
+[0.001, "o", "\r\n"]
+[0.000, "o", "$ git show @livekit/agents@1.6.0:agents/src/telemetry/traces.ts | grep registerSpanProcessor   (#2051)\r\n"]
+[0.023, "o", "  271:  registerSpanProcessor?: SpanProcessorRegistrar;\r\n  325:      registerSpanProcessor(new MetadataSpanProcessor(options.metadata));\r\n  476:          config.registerSpanProcessor(new MetadataSpanProcessor(sessionMetadata));\r\n"]
+[0.001, "x", "0"]
