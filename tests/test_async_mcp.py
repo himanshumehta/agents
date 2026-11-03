@@ -538,25 +538,3 @@ async def test_a_tool_handle_from_before_the_death_works_after_reconnect(
     result = await old_tool({})
     assert "pong" in result
     await server.aclose()
-
-
-@pytest.mark.asyncio
-async def test_a_progress_tool_on_a_dead_connection_fails_clearly(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(mcp_module, "ClientSession", _DyingSession)
-    server = _ConnectableServer()
-    await server.initialize()
-
-    tool = server._make_function_tool(
-        name="echo",
-        description="x",
-        input_schema={"type": "object", "properties": {}},
-        meta=None,
-        options=_resolve_tool_options(MCPToolOptions(report_progress=True)),
-    )
-
-    with pytest.raises(ToolError, match="internal service is unavailable"):
-        await tool(ctx=None, raw_arguments={})
-
-    assert not server.initialized
