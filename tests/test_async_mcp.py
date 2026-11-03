@@ -502,3 +502,61 @@ async def test_initialize_right_after_a_detected_death_opens_a_new_connection(
     assert _ReconnectSession.created == 2
     assert server.initialized
     await server.aclose()
+
+
+class _ReconnectWithContentSession(_DyingSession):
+    created = 0
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        type(self).created += 1
+        self.alive = type(self).created > 1
+
+    async def call_tool(self, name: str, arguments: Any, **kwargs: Any) -> Any:
+        if not self.alive:
+            raise MCPError(mcp.types.CONNECTION_CLOSED, "Connection closed")
+        return mcp.types.CallToolResult(
+            content=[mcp.types.TextContent(type="text", text="pong")], isError=False
+        )
+
+
+@pytest.mark.asyncio
+async def test_a_tool_handle_from_before_the_death_works_after_reconnect(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _ReconnectWithContentSession.created = 0
+    monkeypatch.setattr(mcp_module, "ClientSession", _ReconnectWithContentSession)
+    server = _ConnectableServer()
+    await server.initialize()
+    old_tool = _tool_named(server, "echo")
+
+    with pytest.raises(ToolError):
+        await old_tool({})
+
+    await server.initialize()
+    assert server.initialized
+
+    result = await old_tool({})
+    assert "pong" in result
+    await server.aclose()
+
+
+@pytest.mark.asyncio
+async def test_a_progress_tool_on_a_dead_connection_fails_clearly(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(mcp_module, "ClientSession", _DyingSession)
+    server = _ConnectableServer()
+    await server.initialize()
+
+    tool = server._make_function_tool(
+        name="echo",
+        description="x",
+        input_schema={"type": "object", "properties": {}},
+        meta=None,
+        options=_resolve_tool_options(MCPToolOptions(report_progress=True)),
+    )
+
+    with pytest.raises(ToolError, match="internal service is unavailable"):
+        await tool(ctx=None, raw_arguments={})
+
+    assert not server.initialized
