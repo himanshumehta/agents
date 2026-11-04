@@ -133,7 +133,7 @@ class MCPServer(ABC):
 
     @property
     def initialized(self) -> bool:
-        return self._client is not None
+        return self._client is not None and not self._closing_ev.is_set()
 
     def invalidate_cache(self) -> None:
         self._cache_dirty = True
@@ -142,13 +142,7 @@ class MCPServer(ABC):
         # a detected disconnect clears `_client` at once, but `_run_client` still has to wake and
         # unwind. Its `_ready_fut` already succeeded, so joining it would report a connection that
         # does not exist. Wait for that cleanup and connect afresh instead.
-        while (
-            self._client_task
-            and self._ready_fut
-            and self._client is None
-            and self._ready_fut.done()
-            and not self._client_task.done()
-        ):
+        while self._closing_ev.is_set() and self._client_task and not self._client_task.done():
             await asyncio.wait([self._client_task])
 
         if self._client_task and self._ready_fut and not self._client_task.done():
@@ -218,13 +212,11 @@ class MCPServer(ABC):
         if self._client is not client:
             return
 
-        self._client = None
-        self._raw_tools = None
         self._closing_ev.set()
 
     async def _list_raw_tools(self) -> list[mcp.types.Tool]:
         client = self._client
-        if client is None:
+        if not self.initialized or client is None:
             raise RuntimeError("MCPServer isn't initialized")
 
         if not self._cache_dirty and self._raw_tools is not None:
@@ -239,7 +231,7 @@ class MCPServer(ABC):
             raise RuntimeError(
                 "MCPServer connection closed: internal service is unavailable. "
                 "Please check that the MCPServer is still running."
-            ) from None
+            ) from e
         self._raw_tools = result.tools
         self._cache_dirty = False
         return self._raw_tools
@@ -289,12 +281,6 @@ class MCPServer(ABC):
             async def _tool_called_nonblocking(
                 ctx: RunContext, raw_arguments: dict[str, Any]
             ) -> Any:
-                if self._client is None:
-                    raise ToolError(
-                        "Tool invocation failed: internal service is unavailable. "
-                        "Please check that the MCPServer is still running."
-                    )
-
                 async def _on_progress(
                     progress: float, total: float | None, message: str | None
                 ) -> None:
@@ -320,13 +306,6 @@ class MCPServer(ABC):
         else:
 
             async def _tool_called(raw_arguments: dict[str, Any]) -> Any:
-                # in case the tool is called after the MCPServer aclose.
-                if self._client is None:
-                    raise ToolError(
-                        "Tool invocation failed: internal service is unavailable. "
-                        "Please check that the MCPServer is still running."
-                    )
-
                 tool_result = await self._call_tool(name, raw_arguments)
                 return await _resolve(tool_result, raw_arguments)
 
@@ -363,7 +342,12 @@ class MCPServer(ABC):
         is gone.
         """
         client = self._client
-        assert client is not None
+        # in case the tool is called after the MCPServer aclose.
+        if not self.initialized or client is None:
+            raise ToolError(
+                "Tool invocation failed: internal service is unavailable. "
+                "Please check that the MCPServer is still running."
+            )
         try:
             result = await client.call_tool(name, arguments, progress_callback=progress_callback)
         except MCPError as e:
@@ -373,7 +357,7 @@ class MCPServer(ABC):
             raise ToolError(
                 "Tool invocation failed: internal service is unavailable. "
                 "Please check that the MCPServer is still running."
-            ) from None
+            ) from e
         if not isinstance(result, mcp.types.CallToolResult):
             raise ToolError(
                 f"Tool '{name}' returned an unexpected MCP result ({type(result).__name__})."

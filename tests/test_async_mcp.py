@@ -560,3 +560,97 @@ async def test_a_progress_tool_on_a_dead_connection_fails_clearly(
         await tool(ctx=None, raw_arguments={})
 
     assert not server.initialized
+
+
+class _AliveSession(_DyingSession):
+    created = 0
+    calls = 0
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        type(self).created += 1
+
+    async def call_tool(self, name: str, arguments: Any, **kwargs: Any) -> Any:
+        type(self).calls += 1
+        return mcp.types.CallToolResult(
+            content=[mcp.types.TextContent(type="text", text="pong")], isError=False
+        )
+
+    async def list_tools(self) -> Any:
+        type(self).calls += 1
+        return _FakeListToolsResult(["echo"])
+
+
+@pytest.mark.asyncio
+async def test_initialize_during_aclose_waits_for_the_old_connection_then_reconnects(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _AliveSession.created = 0
+    monkeypatch.setattr(mcp_module, "ClientSession", _AliveSession)
+    server = _ConnectableServer()
+    await server.initialize()
+    old_task = server._client_task
+    assert old_task is not None
+
+    closing = asyncio.create_task(server.aclose())
+    await asyncio.sleep(0)
+    assert not server.initialized
+
+    await server.initialize()
+    await closing
+
+    assert old_task.done()
+    assert _AliveSession.created == 2
+    assert server.initialized
+    await server.aclose()
+
+
+@pytest.mark.asyncio
+async def test_a_closed_connection_error_keeps_the_mcp_error_as_its_cause(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(mcp_module, "ClientSession", _DyingSession)
+
+    call_server = _ConnectableServer()
+    await call_server.initialize()
+    with pytest.raises(ToolError) as call_error:
+        await _tool_named(call_server, "echo")({})
+    assert isinstance(call_error.value.__cause__, MCPError)
+    assert call_error.value.__cause__.code == mcp.types.CONNECTION_CLOSED
+
+    list_server = _ConnectableServer()
+    await list_server.initialize()
+    with pytest.raises(RuntimeError) as list_error:
+        await list_server.list_tools()
+    assert isinstance(list_error.value.__cause__, MCPError)
+    assert list_error.value.__cause__.code == mcp.types.CONNECTION_CLOSED
+
+
+@pytest.mark.asyncio
+async def test_a_call_that_starts_during_aclose_never_reaches_the_server(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _AliveSession.calls = 0
+    monkeypatch.setattr(mcp_module, "ClientSession", _AliveSession)
+    server = _ConnectableServer()
+    await server.initialize()
+    tool = _tool_named(server, "echo")
+    progress_tool = server._make_function_tool(
+        name="echo",
+        description="x",
+        input_schema={"type": "object", "properties": {}},
+        meta=None,
+        options=_resolve_tool_options(MCPToolOptions(report_progress=True)),
+    )
+
+    closing = asyncio.create_task(server.aclose())
+    await asyncio.sleep(0)
+
+    with pytest.raises(ToolError, match="internal service is unavailable"):
+        await tool({})
+    with pytest.raises(ToolError, match="internal service is unavailable"):
+        await progress_tool(ctx=None, raw_arguments={})
+    with pytest.raises(RuntimeError, match="isn't initialized"):
+        await server.list_tools()
+
+    await closing
+    assert _AliveSession.calls == 0
