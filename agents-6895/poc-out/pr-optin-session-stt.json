@@ -1,0 +1,39 @@
+{
+ "mode": "opt-in",
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "call_start",
+   "call_status": "ringing"
+  },
+  {
+   "t": 0.022,
+   "kind": "amd_listening"
+  },
+  {
+   "t": 0.603,
+   "kind": "vad_start"
+  },
+  {
+   "t": 5.302,
+   "kind": "session_stt_final",
+   "text": "Hi, you've reached Maria. I can't take your call right now. Please leave a message after the tone."
+  },
+  {
+   "t": 6.864,
+   "kind": "vad_end"
+  },
+  {
+   "t": 9.29,
+   "kind": "verdict",
+   "category": "machine-vm",
+   "reason": "llm"
+  }
+ ],
+ "verdict": {
+  "t": 9.29,
+  "category": "machine-vm",
+  "reason": "llm"
+ },
+ "label": "PR opt-in, AMD(stt=None)"
+}

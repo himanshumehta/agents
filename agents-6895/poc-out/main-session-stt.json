@@ -1,0 +1,48 @@
+{
+ "mode": "default",
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "call_start",
+   "call_status": "ringing"
+  },
+  {
+   "t": 0.0,
+   "kind": "amd_waits_for_answer"
+  },
+  {
+   "t": 0.604,
+   "kind": "vad_start"
+  },
+  {
+   "t": 5.302,
+   "kind": "session_stt_final",
+   "text": "Hi, you've reached Maria. I can't take your call right now. Please leave a message after the tone."
+  },
+  {
+   "t": 6.864,
+   "kind": "vad_end"
+  },
+  {
+   "t": 12.002,
+   "kind": "call_answered",
+   "call_status": "active"
+  },
+  {
+   "t": 12.022,
+   "kind": "amd_listening"
+  },
+  {
+   "t": 22.003,
+   "kind": "verdict",
+   "category": "uncertain",
+   "reason": "no_speech_timeout"
+  }
+ ],
+ "verdict": {
+  "t": 22.003,
+  "category": "uncertain",
+  "reason": "no_speech_timeout"
+ },
+ "label": "main, AMD(stt=None) session STT"
+}

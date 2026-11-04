@@ -102,7 +102,7 @@ class GreetingStream(stt.RecognizeStream):
         log("stt_audio_received", seconds=round(received, 2))
 
 
-async def run(mode: str) -> dict:
+async def run(mode: str, session_stt: bool = False) -> dict:
     global T0
     answered = asyncio.Event()
 
@@ -152,7 +152,7 @@ async def run(mode: str) -> dict:
     detector = AMD(
         session,  # type: ignore[arg-type]
         llm=llm,
-        stt=GreetingSTT(),
+        stt=None if session_stt else GreetingSTT(),
         participant_identity="callee",
         suppress_compatibility_warning=True,
         **kwargs,
@@ -192,6 +192,7 @@ async def run(mode: str) -> dict:
     vad_task = asyncio.create_task(feed_vad())
     await detector._run(session)  # type: ignore[arg-type]
     listening_logged = False
+    session_text_sent = False
     step = int(SR * FRAME_MS / 1000)
     for i in range(0, len(audio), step):
         target = i / SR
@@ -201,6 +202,10 @@ async def run(mode: str) -> dict:
         if not answered.is_set() and target >= ANSWER_AT:
             log("call_answered", call_status="active")
             answered.set()
+        if session_stt and not session_text_sent and target >= 5.3:
+            session_text_sent = True
+            log("session_stt_final", text=GREETING_TEXT)
+            detector._on_transcript(GREETING_TEXT)
         chunk = audio[i : i + step]
         frame = rtc.AudioFrame(chunk.tobytes(), SR, 1, len(chunk))
         vad_stream.push_frame(frame)
@@ -222,8 +227,9 @@ def main() -> None:
     ap.add_argument("mode", choices=["default", "opt-in"])
     ap.add_argument("--label", default="")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--session-stt", action="store_true")
     a = ap.parse_args()
-    res = asyncio.run(run(a.mode))
+    res = asyncio.run(run(a.mode, a.session_stt))
     res["label"] = a.label or a.mode
     json.dump(res, open(a.out, "w"), indent=1)
     v = res["verdict"]
