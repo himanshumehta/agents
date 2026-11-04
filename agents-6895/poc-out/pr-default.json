@@ -1,0 +1,52 @@
+{
+ "mode": "default",
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "call_start",
+   "call_status": "ringing"
+  },
+  {
+   "t": 0.0,
+   "kind": "amd_waits_for_answer"
+  },
+  {
+   "t": 0.602,
+   "kind": "vad_start"
+  },
+  {
+   "t": 6.862,
+   "kind": "vad_end"
+  },
+  {
+   "t": 12.001,
+   "kind": "call_answered",
+   "call_status": "active"
+  },
+  {
+   "t": 12.021,
+   "kind": "amd_listening"
+  },
+  {
+   "t": 12.021,
+   "kind": "stt_first_audio"
+  },
+  {
+   "t": 22.002,
+   "kind": "verdict",
+   "category": "uncertain",
+   "reason": "no_speech_timeout"
+  },
+  {
+   "t": 22.002,
+   "kind": "stt_audio_received",
+   "seconds": 10.0
+  }
+ ],
+ "verdict": {
+  "t": 22.002,
+  "category": "uncertain",
+  "reason": "no_speech_timeout"
+ },
+ "label": "this PR, default (wait_until_answered=True)"
+}

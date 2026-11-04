@@ -1,0 +1,48 @@
+{
+ "mode": "opt-in",
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "call_start",
+   "call_status": "ringing"
+  },
+  {
+   "t": 0.021,
+   "kind": "amd_listening"
+  },
+  {
+   "t": 0.022,
+   "kind": "stt_first_audio"
+  },
+  {
+   "t": 0.602,
+   "kind": "vad_start"
+  },
+  {
+   "t": 5.281,
+   "kind": "stt_final",
+   "text": "Hi, you've reached Maria. I can't take your call right now. Please leave a message after the tone."
+  },
+  {
+   "t": 6.862,
+   "kind": "vad_end"
+  },
+  {
+   "t": 9.286,
+   "kind": "verdict",
+   "category": "machine-vm",
+   "reason": "llm"
+  },
+  {
+   "t": 9.286,
+   "kind": "stt_audio_received",
+   "seconds": 9.28
+  }
+ ],
+ "verdict": {
+  "t": 9.286,
+  "category": "machine-vm",
+  "reason": "llm"
+ },
+ "label": "this PR, wait_until_answered=False"
+}
