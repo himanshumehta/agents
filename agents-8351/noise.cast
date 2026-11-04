@@ -1,0 +1,9 @@
+{"version":3,"term":{"cols":110,"rows":16},"timestamp":1793779327,"command":"bash ../../evidence/run_8351_noise.sh","env":{"SHELL":"/bin/zsh"}}
+[0.009, "o", "scenario A: noise VAD segment (no final) + 'hello' segment (1 final), commit 0.6 s later\r\n"]
+[0.000, "o", "scenario B: 2 VAD segments, final 'hello' in hand, final 'again' lands 0.3 s after commit\r\n\r\n$ main 8f62cabfa\r\n"]
+[3.651, "o", "   RESULT transcript='hello' commit_s=2.00\r\n   RESULT in-flight transcript='hello again' commit_s=0.30\r\n"]
+[0.016, "o", "\r\n$ PR #8351 185325e5d\r\n"]
+[3.677, "o", "   RESULT transcript='hello' commit_s=2.01\r\n   RESULT in-flight transcript='hello again' commit_s=0.30\r\n"]
+[0.000, "o", "\r\n$ PR #8351 with the finals>=segments check removed\r\n"]
+[1.695, "o", "   RESULT transcript='hello' commit_s=0.00\r\n   RESULT in-flight transcript='hello' commit_s=0.00\r\n"]
+[0.016, "x", "0"]
