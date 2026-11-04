@@ -25,3 +25,12 @@ i=s.index("    def _handle_server_content("); j=s.index("\n    def ", i+10)
 open(p,"w").write(s[:j]+"\n        if server_content.turn_complete:\n            self._mark_current_generation_done()\n"+s[j:])
 PY
 $PY -m pytest -q -p no:cacheprovider $T -k combined_turn_complete 2>&1 | grep -E "^FAILED|passed|failed" | sed 's/^/   /'
+git checkout -q -- $F
+echo "$ mutation C: insert the tool calls into chat_ctx before finalizing"
+$PY - <<'PY'
+p="livekit-plugins/livekit-plugins-google/livekit/plugins/google/realtime/realtime_api.py"; s=open(p).read()
+a="            calls = self._handle_tool_calls(response.tool_call)\n"
+b=a+"            for call_id, name, arguments in calls:\n                self._chat_ctx.insert(llm.FunctionCall(call_id=call_id, name=name, arguments=arguments))\n            calls = []\n"
+open(p,"w").write(s.replace(a,b,1))
+PY
+$PY -m pytest -q -p no:cacheprovider $T -k recorded_after_the_turn 2>&1 | grep -E "^FAILED|passed|failed" | sed 's/^/   /'
