@@ -1,0 +1,12 @@
+{"version":3,"term":{"cols":140,"rows":26},"timestamp":1793771787,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/evidence/agents-js-2040/demo-2040.sh","env":{"SHELL":"/bin/zsh"}}
+[0.005, "o", "livekit/agents-js #2040: avatar sink, avatar leaves, session.output.audio = new output, then say()\r\n\r\n"]
+[0.000, "o", "$ git rev-parse --short HEAD   (main)\r\n"]
+[0.013, "o", "  39b2e651\r\n"]
+[0.000, "o", "$ cp zz_repro_2040.test.ts agents/src/voice/avatar/zz_repro_2040.test.ts && pnpm exec vitest run agents/src/voice/avatar/zz_repro_2040.test.ts\r\n"]
+[8.963, "o", "  avatar left between replies -> new output got 10 frames; first reply done=true, fallback done=true, agentState=listening\r\n  ✓ swap after the avatar leaves between replies 2579ms\r\n  avatar left mid-reply -> new output got 0 frames; first reply done=false, fallback done=false, agentState=speaking\r\n  × swap after the avatar leaves mid-reply 4061ms\r\n  → expected +0 to be 10 // Object.is equality\r\n"]
+[0.000, "o", "  ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\r\n  Tests  1 failed | 1 passed (2)\r\n"]
+[0.004, "o", "\r\n"]
+[0.000, "o", "$ git apply datastream-finish-on-leave.patch   (DataStreamAudioOutput finishes pending playout when the avatar leaves)\r\n"]
+[0.014, "o", "$ cp zz_repro_2040.test.ts agents/src/voice/avatar/zz_repro_2040.test.ts && pnpm exec vitest run agents/src/voice/avatar/zz_repro_2040.test.ts\r\n"]
+[7.372, "o", "  avatar left between replies -> new output got 10 frames; first reply done=true, fallback done=true, agentState=listening\r\n  ✓ swap after the avatar leaves between replies 2592ms\r\n  avatar left mid-reply -> new output got 10 frames; first reply done=true, fallback done=true, agentState=listening\r\n  ✓ swap after the avatar leaves mid-reply 2559ms\r\n  Tests  2 passed (2)\r\n"]
+[0.003, "x", "0"]
