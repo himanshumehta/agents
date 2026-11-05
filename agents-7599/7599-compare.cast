@@ -1,0 +1,11 @@
+{"version":3,"term":{"cols":80,"rows":24},"timestamp":1793859453,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/cmp-7599/demo-7599.sh","env":{"SHELL":"/bin/zsh"}}
+[0.016, "o", "livekit/agents #7599: EventLoopMonitor loses the stack sample when a tick races the watchdog\r\n"]
+[0.014, "o", "main c2b2f5cbd (includes livekit-agents@1.8.10; loop_monitor.py same as origin/main)\r\nrepro = the issue's script; repro_fair = same, but a watchdog blocked on the monitor's lock may wait\r\n\r\n"]
+[0.000, "o", "code    repro A/B    fair A/B     lock held    PR's own tests: main code -> PR code\r\n"]
+[2.118, "o", "main    FAIL/FAIL    FAIL/FAIL    -            -\r\n"]
+[20.371, "o", "#7606   PASS/PASS    PASS/PASS    no           4 failed 37 passed -> 41 passed\r\n"]
+[51.176, "o", "#7618   PASS/hang    PASS/PASS    yes          2 failed 37 passed -> 39 passed\r\n"]
+[26.778, "o", "#8199   PASS/PASS    PASS/PASS    yes          2 failed 37 passed -> 39 passed\r\n\r\n"]
+[0.000, "o", "lock held = the watchdog keeps _lock while it walks the loop thread's stack\r\n"]
+[0.000, "o", "hang = the script waited on the paused tick, which holds the lock (stopped after 30 s)\r\n"]
+[0.000, "x", "0"]
