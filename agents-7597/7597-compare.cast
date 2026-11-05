@@ -1,0 +1,8 @@
+{"version":3,"term":{"cols":80,"rows":24},"timestamp":1793851584,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/cmp-7597/demo-7597.sh","env":{"SHELL":"/bin/zsh"}}
+[0.019, "o", "livekit/agents #7597: silero VAD deactivation_threshold after update_options\r\n"]
+[0.030, "o", "main = c2b2f5cbd (silero/vad.py identical to origin/main 853fbf243)\r\n\r\n"]
+[6.751, "o", "case                                         main    #7607   #7611   #7735   #8155   #8161  \r\n1 load(act=0.8)  [reference]                 0.65    0.65    0.65    0.65    0.65    0.65   \r\n2 load(); update(act=0.8)                    0.35    0.65    0.65    0.65    0.65    0.35   \r\n3 load(act=0.8); update(act=0.5)             0.65    0.35    0.35    0.35    0.35    0.65   \r\n4 load(deact=0.2); update(act=0.8)           0.2     0.2     0.2     0.65    0.2     0.2    \r\n5 load(); update(act=0.8, deact=0.3)         0.3     0.3     0.3     0.3     0.3     0.3    \r\n6 load(); update(act=0.1)  [floor]           0.35    0.01    0.01    0.01    0.01    0.35   \r\n"]
+[0.000, "o", "7 open stream, then update(act=0.8)          0.35/0.35 0.65/0.65 0.65/0.65 0.65/0.65 0.65/0.65 0.35/0.35\r\n8 load(); update(deact=0.3); update(act=0.8) 0.3     0.3     0.3     0.65    0.3     0.3    \r\n"]
+[0.002, "o", "\r\n"]
+[0.000, "o", "values: deactivation_threshold on the VAD (/ on the already-open stream)\r\n"]
+[0.000, "x", "0"]
