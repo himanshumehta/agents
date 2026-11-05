@@ -1,0 +1,12 @@
+{"version":3,"term":{"cols":80,"rows":24},"timestamp":1793851732,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/cmp-7486/demo-7486.sh","env":{"SHELL":"/bin/zsh"}}
+[0.020, "o", "livekit/agents #7486: Tagger outcome invariant, main c2b2f5cbd vs #7490 vs #7491\r\ncells: outcome/outcome_reason tags\r\n"]
+[0.000, "o", "\r\n"]
+[0.169, "o", "case                                       main                     #7490                    #7491                   \r\nA fail(r1); add(lk.success)                success/r1 fail,success  success/None success     success/None success    \r\nB success(r1); add(lk.fail)                success/r1 fail,success  fail/None fail           fail/None fail          \r\nC success(r1); remove(lk.success)          None/r1                  None/None                None/None               \r\nD add(lk.fail, metadata)                   fail/None fail +meta     fail/None fail +meta     fail/None fail +meta    \r\n"]
+[0.000, "o", "E add(lk.fail, metadata); success(r2)      success/r2 success       success/r2 success       success/r2 success      \r\nF fail(r1); success(r2); remove(lk.fail)   success/r2 success       success/r2 success       success/r2 success      \r\nG success(r1); fail(r2); remove(lk.success fail/r2 fail             fail/r2 fail             fail/r2 fail            \r\n"]
+[0.000, "o", "H fail(r1); add(lk.fail, metadata)         fail/r1 fail +meta       fail/None fail +meta     fail/None fail +meta    \r\n"]
+[0.002, "o", "\r\n"]
+[1.413, "o", "$ pytest tests/test_tagger.py   (#7490 tests, main code)   2 failed, 1 passed in 0.14s\r\n"]
+[1.392, "o", "$ pytest tests/test_tagger.py   (#7490 tests, #7490 code)    3 passed in 0.07s\r\n"]
+[1.443, "o", "$ pytest tests/test_observability.py   (#7491 tests, main code)   3 failed, 4 passed in 0.15s\r\n"]
+[1.325, "o", "$ pytest tests/test_observability.py   (#7491 tests, #7491 code)    7 passed in 0.07s\r\n"]
+[0.028, "x", "0"]
