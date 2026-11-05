@@ -1,0 +1,11 @@
+{"version":3,"term":{"cols":80,"rows":24},"timestamp":1793862068,"command":"bash /private/tmp/claude-502/-Users-himanshumehta-sai/d3afa51d-b147-43b4-babf-30e20009f776/scratchpad/cmp-7006/demo-7006.sh","env":{"SHELL":"/bin/zsh"}}
+[0.007, "o", "livekit/agents #7006: what a finished job process leaves in PROMETHEUS_MULTIPROC_DIR\r\n"]
+[0.014, "o", "main c2b2f5cbd (includes livekit-agents@1.8.10; supervised_proc.py same as origin/main)\r\n"]
+[0.000, "o", "real ProcJobExecutor child (spawn); its initialize fn records a Counter, a Histogram,\r\n"]
+[0.000, "o", "a Gauge (default 'all') and a Gauge(multiprocess_mode='livesum'); then aclose()\r\n\r\n"]
+[2.044, "o", "main    child while running: counter gauge_all gauge_livesum histogram\r\n        child after aclose(): counter gauge_all gauge_livesum histogram\r\n        parent (worker) pid:  histogram\r\n"]
+[0.003, "o", "\r\n"]
+[1.966, "o", "#7017   child while running: counter gauge_all gauge_livesum histogram\r\n        child after aclose(): counter gauge_all histogram\r\n        parent (worker) pid:  histogram\r\n"]
+[0.023, "o", "\r\n"]
+[0.000, "o", "prometheus_client.multiprocess.mark_process_dead removes only gauge_live*_<pid>.db\r\n"]
+[0.001, "x", "0"]
